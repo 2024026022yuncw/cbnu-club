@@ -1,43 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase-client";
 
-export default function LoginPage() {
-  const router = useRouter();
-
+export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleLogin(
+  async function handleSignup(
     e: React.FormEvent
   ) {
     e.preventDefault();
 
-    const { error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
     if (error) {
       alert(error.message);
       return;
     }
 
-    alert("로그인 성공!");
-    router.push("/");
+    alert("회원가입 성공!");
   }
 
   return (
     <main className="max-w-md mx-auto p-8">
       <h1 className="text-3xl font-bold mb-6">
-        로그인
+        회원가입
       </h1>
 
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleSignup}
         className="space-y-4"
       >
         <input
@@ -64,7 +59,7 @@ export default function LoginPage() {
           type="submit"
           className="w-full bg-black text-white rounded-lg py-2"
         >
-          로그인
+          회원가입
         </button>
       </form>
     </main>

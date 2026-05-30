@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { supabase } from "@/lib/supabase";
+import ApplyButton from "@/components/ApplyButton";
 
 export default async function ClubDetail({
   params,
@@ -48,6 +49,8 @@ export default async function ClubDetail({
           <strong>상태:</strong> {club.status}
         </p>
       </div>
+      <ApplyButton clubId={club.id} />
     </main>
   );
 }
+

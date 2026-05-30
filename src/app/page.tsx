@@ -82,3 +82,4 @@ const { data: clubs, error } = await query;
     </main>
   );
 }
+
