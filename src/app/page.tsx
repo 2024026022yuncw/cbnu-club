@@ -1,12 +1,23 @@
+import LoginButton from "@/components/LoginButton";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-export default async function Home() {
-  const { data: clubs, error } = await supabase
-    .from("clubs")
-    .select("*")
-    .order("name");
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+const { q } = await searchParams;
+  const query = supabase
+  .from("clubs")
+  .select("*")
+  .order("name");
 
+if (q) {
+  query.ilike("name", `%${q}%`);
+}
+
+const { data: clubs, error } = await query;
   if (error) {
     return <div>에러 발생: {error.message}</div>;
   }
@@ -14,10 +25,23 @@ export default async function Home() {
   const categories = [...new Set(clubs?.map((c) => c.category))];
 
   return (
-    <main className="max-w-5xl mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8">
-        충북대학교 중앙동아리
-      </h1>
+   <main className="max-w-5xl mx-auto p-8">
+  <div className="flex justify-between items-center mb-8">
+    <h1 className="text-4xl font-bold">
+      충북대학교 중앙동아리
+    </h1>
+
+    <LoginButton />
+  </div>
+<form className="mb-6">
+  <input
+    type="text"
+    name="q"
+    defaultValue={q}
+    placeholder="동아리 검색..."
+    className="border rounded-lg px-4 py-2 w-full"
+  />
+</form>
 
       <div className="flex gap-2 mb-6">
         {categories.map((category) => (
