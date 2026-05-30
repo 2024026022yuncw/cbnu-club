@@ -5,7 +5,9 @@ import { supabase } from "@/lib/supabase-client";
 
 type Application = {
   id: string;
-  club_id: string;
+  clubs: {
+    name: string;
+  } | null;
 };
 
 export default function MyPage() {
@@ -46,7 +48,12 @@ export default function MyPage() {
 
       const { data, error } = await supabase
         .from("club_applications")
-        .select("id, club_id")
+        .select(`
+          id,
+          clubs (
+            name
+          )
+        `)
         .eq("user_id", user.id);
 
       if (error) {
@@ -54,7 +61,7 @@ export default function MyPage() {
         return;
       }
 
-      setApplications(data ?? []);
+      setApplications((data as Application[]) ?? []);
     }
 
     loadUser();
@@ -80,7 +87,9 @@ export default function MyPage() {
             key={item.id}
             className="border rounded-lg p-3 flex justify-between items-center"
           >
-            <span>{item.club_id}</span>
+            <span>
+              {item.clubs?.name ?? "동아리"}
+            </span>
 
             <button
               onClick={() => handleCancel(item.id)}
